@@ -1,8 +1,8 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import GenerateImageForm from "../components/GenerateImageForm";
 import GeneratedImageCard from "../components/GeneratedImageCard";
+
 const Container = styled.div`
   height: 100%;
   overflow-y: scroll;
@@ -19,7 +19,6 @@ const Container = styled.div`
   }
 `;
 
-
 const Wrapper = styled.div`
   width: 100%;
   height: fit-content;
@@ -31,6 +30,7 @@ const Wrapper = styled.div`
     flex-direction: column;
   }
 `;
+
 const CreatePost = () => {
   const [generateImageLoading, setGenerateImageLoading] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);

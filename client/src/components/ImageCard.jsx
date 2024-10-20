@@ -66,8 +66,8 @@ const ImageCard = ({ item }) => {
         alt={item?.prompt}
         style={{ borderRadius: "12px" }}
         width="100%"
-        // src={"https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg"} 
-        src={item?.photo}
+        src={"https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg"} 
+        // src={item?.photo}
       />
       <HoverOverlay>
         <Prompt>{item?.prompt}</Prompt>

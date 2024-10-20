@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SearchBar from "../components/SearchBar";
 import ImageCard from "../components/ImageCard";
-import { Photo } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
+import { GetPosts } from "../api";
 
 const Container = styled.div`
   height: 100%;
@@ -40,6 +41,16 @@ const Span = styled.div`
     font-size: 20px;
   }
 `;
+const TextSpan = styled.div`
+  font-size: 30px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.secondary};
+  text-align: center;
+  display: flex;
+  @media (max-width: 600px) {
+    font-size: 20px;
+  }
+`;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -52,6 +63,7 @@ const Wrapper = styled.div`
 const CardWrapper = styled.div`
   display: grid;
   gap: 20px;
+
   @media (min-width: 1200px) {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -62,44 +74,98 @@ const CardWrapper = styled.div`
     grid-template-columns: repeat(2, 1fr);
   }
 `;
+
 const Home = () => {
-  const items = {
-    photo:"https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg",
-    name:"John Doe",
-    prompt:"A random image",
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
-  }
-    return(
+  const getPosts = async () => {
+    setLoading(true);
+    await GetPosts()
+      .then((res) => {
+        setLoading(false);
+        setPosts(res?.data?.data);
+        setFilteredPosts(res?.data?.data);
+      })
+      .catch((error) => {
+        setError(error?.response?.data?.message);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  //Search
+  useEffect(() => {
+    if (!search) {
+      setFilteredPosts(posts);
+    }
+
+    const SearchFilteredPosts = posts.filter((post) => {
+      const promptMatch = post?.prompt
+        ?.toLowerCase()
+        .includes(search.toString().toLowerCase());
+      const authorMatch = post?.name
+        ?.toLowerCase()
+        .includes(search.toString().toLowerCase());
+
+      return promptMatch || authorMatch;
+    });
+
+    if (search) {
+      setFilteredPosts(SearchFilteredPosts);
+    }
+  }, [posts, search]);
+
+  return (
     <Container>
-        <Headline>
-            Explore popular posts in the Community!
-            <Span>⦿ Generated with AI ⦿</Span>
-        </Headline>
-        <SearchBar />
-          <Wrapper>
-            <CardWrapper>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-                <ImageCard item={items}/>
-               
-            </CardWrapper>
-                
-                
-                
-          </Wrapper>
-
-        
-
+      <Headline>
+        Explore popular posts in the Community!
+        <Span>⦿ Generated with AI ⦿</Span>
+      </Headline>
+      <SearchBar search={search} setSearch={setSearch} />
+      <Wrapper>
+        {error && <div style={{ color: "red" }}>{error}</div>}
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <CardWrapper>
+            {filteredPosts.length === 0 ? (
+              <>
+              <ImageCard />
+              <ImageCard />
+              <ImageCard />
+              <ImageCard />
+              <ImageCard />
+              <ImageCard />
+              <ImageCard />
+              <ImageCard />
+              <ImageCard />
+              <ImageCard />
+              
+              
+              
+              <TextSpan> No Posts Found </TextSpan></>
+            ) : (
+              <>
+                {filteredPosts
+                  .slice()
+                  .reverse()
+                  .map((item, index) => (
+                    <ImageCard key={index} item={item} />
+                  ))}
+              </>
+            )}
+          </CardWrapper>
+        )}
+      </Wrapper>
     </Container>
-    )
+  );
 };
 
 export default Home;
