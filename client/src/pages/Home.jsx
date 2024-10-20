@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import SearchBar from "../components/SearchBar";
 import ImageCard from "../components/ImageCard";
+import { Photo } from "@mui/icons-material";
 
 const Container = styled.div`
   height: 100%;
@@ -62,6 +63,12 @@ const CardWrapper = styled.div`
   }
 `;
 const Home = () => {
+  const items = {
+    photo:"https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg",
+    name:"John Doe",
+    prompt:"A random image",
+
+  }
     return(
     <Container>
         <Headline>
@@ -69,16 +76,27 @@ const Home = () => {
             <Span>⦿ Generated with AI ⦿</Span>
         </Headline>
         <SearchBar />
+          <Wrapper>
+            <CardWrapper>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+                <ImageCard item={items}/>
+               
+            </CardWrapper>
+                
+                
+                
+          </Wrapper>
 
-        <CardWrapper>
-            <Wrapper>
-                <ImageCard />
-                
-                
-                
-            </Wrapper>
-
-        </CardWrapper>
+        
 
     </Container>
     )
