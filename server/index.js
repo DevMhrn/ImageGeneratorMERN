@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import PostRouter from "./routes/Post.js";
+import GenerateImageRouter from "./routes/GenerateImage.js";
 
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use("/api/post", PostRouter);
+app.use("/api/generateimage", GenerateImageRouter);
 
 
 //Default get
@@ -50,7 +52,7 @@ const PORT = process.env.PORT || 8080;
 const startServer = async () => {
   try {
     connectDB();
-    app.listen(PORT, () => console.log(`Server started on port 8080 and it is running on https://localhost:${PORT}`));
+    app.listen(PORT, () => console.log(`Server started on port 8080 and it is running on http://localhost:${PORT}`));
   } catch (error) {
     console.log(error);
   }
