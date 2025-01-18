@@ -32,6 +32,7 @@ const Headline = styled.div`
     font-size: 22px;
   }
 `;
+
 const Span = styled.div`
   font-size: 30px;
   font-weight: 800;
@@ -41,12 +42,14 @@ const Span = styled.div`
     font-size: 20px;
   }
 `;
+
 const TextSpan = styled.div`
   font-size: 30px;
   font-weight: 700;
   color: ${({ theme }) => theme.secondary};
   text-align: center;
   display: flex;
+
   @media (max-width: 600px) {
     font-size: 20px;
   }
@@ -66,6 +69,7 @@ const CardWrapper = styled.div`
 
   @media (min-width: 1200px) {
     grid-template-columns: repeat(4, 1fr);
+    
   }
   @media (min-width: 640px) and (max-width: 1199px) {
     grid-template-columns: repeat(3, 1fr);
@@ -81,6 +85,7 @@ const Home = () => {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [showApiKeyAlert, setShowApiKeyAlert] = useState(true); // State for alert visibility
 
   const getPosts = async () => {
     setLoading(true);
@@ -100,7 +105,15 @@ const Home = () => {
     getPosts();
   }, []);
 
-  //Search
+  // Show alert for OpenAI API key
+  // useEffect(() => {
+  //   if (showApiKeyAlert) {
+  //     alert("An OpenAI API key is required for this application.");
+  //     setShowApiKeyAlert(false); // Hide alert after showing it once
+  //   }
+  // }, [showApiKeyAlert]);
+
+  // Search
   useEffect(() => {
     if (!search) {
       setFilteredPosts(posts);
@@ -137,20 +150,18 @@ const Home = () => {
           <CardWrapper>
             {filteredPosts.length === 0 ? (
               <>
-              <ImageCard />
-              <ImageCard />
-              <ImageCard />
-              <ImageCard />
-              <ImageCard />
-              <ImageCard />
-              <ImageCard />
-              <ImageCard />
-              <ImageCard />
-              <ImageCard />
-              
-              
-              
-              <TextSpan> No Posts Found </TextSpan></>
+                <ImageCard />
+                <ImageCard />
+                <ImageCard />
+                <ImageCard />
+                <ImageCard />
+                <ImageCard />
+                <ImageCard />
+                <ImageCard />
+                <ImageCard />
+                <ImageCard />
+                <TextSpan>No Posts Found</TextSpan>
+              </>
             ) : (
               <>
                 {filteredPosts

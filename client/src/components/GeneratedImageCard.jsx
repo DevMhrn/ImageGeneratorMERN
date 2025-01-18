@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 const Container = styled.div`
   flex: 1;
-  min-height: 300px;
   display: flex;
   gap: 16px;
   align-items: center;
@@ -17,8 +16,9 @@ const Container = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 500px;
+  margin-top: 10px;
+  object-fit: contain;
   border-radius: 24px;
   background: ${({ theme }) => theme.black + 50};
 `;
@@ -35,7 +35,7 @@ const GeneratedImageCard = ({ src, loading }) => {
         </>
       ) : (
         <>
-          {src ? <Image src={src} /> : <>Write a prompt to generate image </>}
+          {src ? <Image src={src} /> : <>Write a prompt to generate image </> }
         </>
       )}
     </Container>

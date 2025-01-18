@@ -53,33 +53,48 @@ const GenerateImageForm = ({
 }) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
-    await GenerateAIImage({ prompt: post.prompt })
-      .then((res) => {
-        setPost({
-          ...post,
-          photo: `data:image/jpge;base64,${res?.data?.photo}`,
-        });
-        setGenerateImageLoading(false);
-      })
-      .catch((error) => {
-        setError(error?.response?.data?.message);
-        setGenerateImageLoading(false);
+    setError(""); // Clear previous errors
+  
+    try {
+      const res = await GenerateAIImage({ prompt: post.prompt });
+      // Assuming GenerateAIImage sends the request to your /api/generateImage endpoint
+      setPost({
+        ...post,
+        photo: res.data.photo, // Directly use the data URL from the response
       });
+      // console.log("Generated Image:", res.data.photo);
+      setGenerateImageLoading(false);
+    } catch (error) {
+      console.error("Error generating image:", error);
+      setError(
+        error.response?.data?.message ||
+          "An error occurred while generating the image."
+      );
+      setGenerateImageLoading(false);
+    }
   };
+
   const createPostFun = async () => {
     setCreatePostLoading(true);
-    await CreatePost(post)
-      .then((res) => {
-        setCreatePostLoading(false);
-        navigate("/");
-      })
-      .catch((error) => {
-        setError(error?.response?.data?.message);
-        setCreatePostLoading(false);
-      });
+    setError("");
+
+    try {
+      await CreatePost(post);
+      setCreatePostLoading(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Error creating post:", error);
+      setError(
+        error.response?.data?.message ||
+          "An error occurred while creating the post."
+      );
+      setCreatePostLoading(false);
+    }
   };
+
   return (
     <Form>
       <Top>
@@ -107,6 +122,13 @@ const GenerateImageForm = ({
         />
         {error && <div style={{ color: "red" }}>{error}</div>}
         ** You can post the AI Generated Image to the Community **
+        {/* {post.photo && (
+          <img
+            src={post.photo}
+            alt="Generated AI"
+            style={{ width: "100%", maxWidth: "500px", marginTop: "10px" }}
+          />
+        )} */}
       </Body>
       <Actions>
         <Button
@@ -115,7 +137,7 @@ const GenerateImageForm = ({
           leftIcon={<AutoAwesome />}
           isLoading={generateImageLoading}
           isDisabled={post.prompt === ""}
-          onClick={() => generateImageFun()}
+          onClick={generateImageFun}
         />
         <Button
           text="Post Image"
@@ -126,7 +148,7 @@ const GenerateImageForm = ({
           isDisabled={
             post.name === "" || post.prompt === "" || post.photo === ""
           }
-          onClick={() => createPostFun()}
+          onClick={createPostFun}
         />
       </Actions>
     </Form>
